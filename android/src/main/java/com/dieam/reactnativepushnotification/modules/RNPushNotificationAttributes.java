@@ -13,29 +13,31 @@ import org.json.JSONObject;
 import static com.dieam.reactnativepushnotification.modules.RNPushNotification.LOG_TAG;
 
 public class RNPushNotificationAttributes {
-    private static final String ID = "id";
-    private static final String MESSAGE = "message";
-    private static final String FIRE_DATE = "fireDate";
-    private static final String TITLE = "title";
-    private static final String TICKER = "ticker";
-    private static final String AUTO_CANCEL = "autoCancel";
-    private static final String LARGE_ICON = "largeIcon";
-    private static final String SMALL_ICON = "smallIcon";
-    private static final String BIG_TEXT = "bigText";
-    private static final String SUB_TEXT = "subText";
-    private static final String NUMBER = "number";
-    private static final String SOUND = "sound";
-    private static final String COLOR = "color";
-    private static final String GROUP = "group";
-    private static final String USER_INTERACTION = "userInteraction";
-    private static final String PLAY_SOUND = "playSound";
-    private static final String VIBRATE = "vibrate";
-    private static final String VIBRATION = "vibration";
-    private static final String ACTIONS = "actions";
-    private static final String TAG = "tag";
-    private static final String REPEAT_TYPE = "repeatType";
-    private static final String REPEAT_TIME = "repeatTime";
-    private static final String ONGOING = "ongoing";
+    public static final String ID = "id";
+    public static final String MESSAGE = "message";
+    public static final String FIRE_DATE = "fireDate";
+    public static final String TITLE = "title";
+    public static final String TICKER = "ticker";
+    public static final String AUTO_CANCEL = "autoCancel";
+    public static final String LARGE_ICON = "largeIcon";
+    public static final String SMALL_ICON = "smallIcon";
+    public static final String BIG_TEXT = "bigText";
+    public static final String SUB_TEXT = "subText";
+    public static final String NUMBER = "number";
+    public static final String SOUND = "sound";
+    public static final String COLOR = "color";
+    public static final String GROUP = "group";
+    public static final String USER_INTERACTION = "userInteraction";
+    public static final String PLAY_SOUND = "playSound";
+    public static final String VIBRATE = "vibrate";
+    public static final String VIBRATION = "vibration";
+    public static final String ACTIONS = "actions";
+    public static final String TAG = "tag";
+    public static final String REPEAT_TYPE = "repeatType";
+    public static final String REPEAT_TIME = "repeatTime";
+    public static final String ONGOING = "ongoing";
+    public static final String CHANNEL_ID = "channelId";
+    public static final String CHANNEL_NAME = "channelName";
 
     private final String id;
     private final String message;
@@ -60,6 +62,8 @@ public class RNPushNotificationAttributes {
     private final String repeatType;
     private final double repeatTime;
     private final boolean ongoing;
+    private final String channelId;
+    private final String channelName;
 
     public RNPushNotificationAttributes(Bundle bundle) {
         id = bundle.getString(ID);
@@ -85,6 +89,8 @@ public class RNPushNotificationAttributes {
         repeatType = bundle.getString(REPEAT_TYPE);
         repeatTime = bundle.getDouble(REPEAT_TIME);
         ongoing = bundle.getBoolean(ONGOING);
+        channelId = bundle.getString(CHANNEL_ID);
+        channelName = bundle.getString(CHANNEL_NAME);
     }
 
     private RNPushNotificationAttributes(JSONObject jsonObject) {
@@ -112,6 +118,8 @@ public class RNPushNotificationAttributes {
             repeatType = jsonObject.has(REPEAT_TYPE) ? jsonObject.getString(REPEAT_TYPE) : null;
             repeatTime = jsonObject.has(REPEAT_TIME) ? jsonObject.getDouble(REPEAT_TIME) : 0.0;
             ongoing = jsonObject.has(ONGOING) ? jsonObject.getBoolean(ONGOING) : false;
+            channelId = jsonObject.has(CHANNEL_ID) ? jsonObject.getString(CHANNEL_ID) : null;
+            channelName = jsonObject.has(CHANNEL_NAME) ? jsonObject.getString(CHANNEL_NAME) : null;
         } catch (JSONException e) {
             throw new IllegalStateException("Exception while initializing RNPushNotificationAttributes from JSON", e);
         }
@@ -197,6 +205,8 @@ public class RNPushNotificationAttributes {
         bundle.putString(REPEAT_TYPE, repeatType);
         bundle.putDouble(REPEAT_TIME, repeatTime);
         bundle.putBoolean(ONGOING, ongoing);
+        bundle.putString(CHANNEL_NAME, channelName);
+        bundle.putString(CHANNEL_ID, channelId);
         return bundle;
     }
 
@@ -226,6 +236,8 @@ public class RNPushNotificationAttributes {
             jsonObject.put(REPEAT_TYPE, repeatType);
             jsonObject.put(REPEAT_TIME, repeatTime);
             jsonObject.put(ONGOING, ongoing);
+            jsonObject.put(CHANNEL_NAME, channelName);
+            jsonObject.put(CHANNEL_ID, channelId);
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Exception while converting RNPushNotificationAttributes to " +
                     "JSON. Returning an empty object", e);

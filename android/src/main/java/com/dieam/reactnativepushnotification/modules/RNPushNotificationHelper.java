@@ -4,6 +4,7 @@ package com.dieam.reactnativepushnotification.modules;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -19,6 +20,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.facebook.react.bridge.ReadableMap;
@@ -157,7 +159,25 @@ public class RNPushNotificationHelper {
                 title = context.getPackageManager().getApplicationLabel(appInfo).toString();
             }
 
-            NotificationCompat.Builder notification = new NotificationCompat.Builder(context)
+            NotificationCompat.Builder notification;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                String channelId = bundle.getString(RNPushNotificationAttributes.CHANNEL_ID);
+                channelId = channelId == null ? "defaultChannelId" : channelId;
+                String channelName = bundle.getString(RNPushNotificationAttributes.CHANNEL_NAME);
+                channelName = channelName == null ? "defaultChannelName" : channelName;
+
+                NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+                NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+                assert notificationManager != null;
+                notificationManager.createNotificationChannel(channel);
+
+                notification = new NotificationCompat.Builder(context, channelId);
+            } else {
+                notification = new NotificationCompat.Builder(context);
+            }
+
+            notification
                     .setContentTitle(title)
                     .setTicker(bundle.getString("ticker"))
                     .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
